@@ -1,18 +1,19 @@
 <template>
-  <div class="ee-select-wrapper">
-    <label :for="id" v-if="label" class="ee-select-label">{{ label }}</label>
+  <div class="ee-select-wrapper" :class="{ 'ee-select-focused': inFocus }">
     <div class="ee-select-inner">
       <select
         :id="id"
         class="ee-select"
-        :style="style"
-        v-bind="$attrs"
-        :rounded="rounded"
         :class="classes"
-        :helpText="helpText"
+        :style="style"
+        :rounded="rounded"
         @input="getValue"
+        :helpText="helpText"
+        @focus="inFocus = true"
+        @blur="getValue"
+        v-bind="$attrs"
       >
-        <option selected disabled><slot /></option>
+        <option selected disabled></option>
         <option
           v-for="(value, index) in selectDropdownOptions"
           :key="index"
@@ -21,6 +22,9 @@
           {{ value }}
         </option>
       </select>
+      <label :for="id" v-if="label" class="ee-select-label">
+        {{ label }}
+      </label>
       <i :class="iconClasses" class="ee-select-icon" v-if="iconClasses" />
     </div>
     <small class="ee-select-error" v-if="invalid">
@@ -44,9 +48,17 @@ export default {
     },
     label: {
       type: String,
+      required: true,
     },
     iconClasses: {
       type: String,
+    },
+    size: {
+      type: String,
+      default: "medium",
+      validator: function (value) {
+        return ["small", "medium", "large"].indexOf(value) !== -1;
+      },
     },
     rounded: {
       type: String,
@@ -72,14 +84,7 @@ export default {
     },
     helpText: {
       type: String,
-    },
-    size: {
-      type: String,
-      default: "medium",
-      validator: function (value) {
-        return ["small", "medium", "large"].indexOf(value) !== -1;
-      },
-    },
+    },    
     disabled: {
       type: Boolean,
       default: false,
@@ -89,10 +94,10 @@ export default {
     },
   },
 
-  methods: {
-    getValue(event) {
-      this.emitter.emit("select-change", { selectChangeContent: event.target.value });
-    },
+  data() {
+    return {
+      inFocus: false,
+    };
   },
 
   setup(props) {
@@ -116,6 +121,14 @@ export default {
       })),
     };
   },
+
+  methods: {
+    getValue(event) {
+      if (event.target.value.length > 0) this.inFocus = true;
+      else this.inFocus = false;
+      this.emitter.emit("select-label-change", { selectLabelChangeContent: event.target.value });
+    },
+  },
 };
 </script>
 
@@ -124,23 +137,32 @@ export default {
   font-size: 1rem;
   color: #495057;
   background: #fff;
-  padding: 0.75rem 0.75rem;
-  border: 1px solid #ced4da;
+  padding: 0.75rem 0;
+  border: none;
+  border-bottom: 1px solid #ced4da;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
     box-shadow 0.2s;
-  border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
 
   &:hover {
     border-color: #3b82f6;
   }
-
   &:focus {
     outline: 0 none;
     outline-offset: 0;
-    box-shadow: 0 0 0 0.2rem #bfdbfe;
     border-color: #3b82f6;
+
+    + .ee-select-label {
+      top: -15px;
+      transform: scale(75%);
+      transform-origin: left;
+    }
+  }
+  &-focused .ee-select + .ee-select-label {
+    top: -15px;
+    transform: scale(75%);
+    transform-origin: left;
   }
   &.disabled {
     opacity: 0.5;
@@ -152,16 +174,21 @@ export default {
   }
   &--medium {
     font-size: 1rem;
-    padding: 0.6rem 0.75rem;
+    padding: 0.6rem 0;
   }
   &--large {
     font-size: 1.25rem;
-    padding: 0.75rem 0.9375rem;
+    padding: 0.75rem 0;
   }
   &-label {
-    padding-right: 0.5rem;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    z-index: 1;
+    pointer-events: none;
+    transition: transform 0.2s, top 0.2s;
     display: block;
-    margin-bottom: 0.5rem;
   }
   &.invalid {
     border-color: #e24c4c !important;
@@ -177,23 +204,14 @@ export default {
   }
   &-icon {
     position: absolute;
-    right: 10px;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
   }
-  &-inner {
-    position: relative;
-  }
   &--with-icon {
     padding-left: 40px;
-    appearance: none;
-  }
-  &--with-right-icon {
-    padding-right: 40px;
-    padding-left: 20px;
-    &-image {
-      left: auto;
-      right: 12px;
+    + .ee-select-label {
+      left: 40px;
     }
   }
   &-error {

@@ -4,11 +4,11 @@
       <input
         type="checkbox"
         :id="id"
-        class="ee-styled-checkbox"
-        v-bind="$attrs"
         @input="getValue"
-        :rounded="rounded"
+        class="ee-styled-checkbox"
         :class="classes"
+        :rounded="rounded"
+        v-bind="$attrs"
       />
     <label :for="id" class="ee-styled-checkbox-label">{{ label }}</label>
     </div>
@@ -28,19 +28,19 @@ export default {
     label: {
       type: String,
     },
-    invalid: {
-      type: Boolean,
-      default: false,
-    },
-    errorMessage: {
-      type: String,
-    },
     size: {
       type: String,
       default: "small",
       validator: function (value) {
         return ["small", "medium", "large"].indexOf(value) !== -1;
       },
+    },
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
+    errorMessage: {
+      type: String,
     },
     disabled: {
       type: Boolean,

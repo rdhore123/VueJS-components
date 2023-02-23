@@ -1,26 +1,22 @@
 <template>
-  <div class="ee-textarea-wrapper" :class="{ 'ee-textarea-focused': inFocus }">
+  <div class="ee-textarea-wrapper">
+    <label :for="id" v-if="label" class="ee-textarea-label">{{ label }}</label>
     <div class="ee-textarea-inner">
       <textarea
         :id="id"
-        class="ee-textarea"
-        :style="style"
-        v-bind="$attrs"
         :value="textareaValue"
         @input="getValue"
         :rounded="rounded"
-        :class="classes"
-        :helpText="helpText"
         :rows="rows"
         :resize="resize"
         :placeholder="placeholder"
         :characterLimit="characterLimit"
-        @focus="inFocus = true"
-        @blur="getValue"
+        class="ee-textarea"
+        :class="classes"
+        :helpText="helpText"
+        :style="style"
+        v-bind="$attrs"
       />
-      <label :for="id" v-if="label" class="ee-textarea-label">
-        {{ label }}
-      </label>
       <div v-if="characterLimit" :class="characterPosition">
         {{ characterLimit }}
       </div>
@@ -39,7 +35,7 @@
 import { reactive, computed } from "vue";
 
 export default {
-  name: "TextareaFloatingLabel",
+  name: "Textarea",
   inheritAttrs: false,
   props: {
     rows: {
@@ -58,8 +54,11 @@ export default {
         return ["both", "vertical", "horizontal", "none"].indexOf(value) !== -1;
       },
     },
-    id: {
-      type: String,
+    characterLimit: {
+      type: Number,
+    },
+    characterPosition: {
+      type: Boolean,
     },
     iconClasses: {
       type: String,
@@ -68,6 +67,9 @@ export default {
       type: Boolean,
     },
     rounded: {
+      type: String,
+    },
+    id: {
       type: String,
     },
     textColor: {
@@ -98,13 +100,7 @@ export default {
     },
     textareaValue: {
       type: String,
-    },
-    characterLimit: {
-      type: Number,
-    },
-    characterPosition: {
-      type: Boolean,
-    },
+    },    
   },
 
   setup(props) {
@@ -140,15 +136,8 @@ export default {
   //     remainingCharCount: ''
   //   }
   // },
-  data() {
-    return {
-      inFocus: false,
-    };
-  },
   methods: {
     getValue(event) {
-      if (event.target.value.length > 0) this.inFocus = true;
-      else this.inFocus = false;
       this.$emit("update:textareaValue", event.target.value);
       // this.remainingCharCount = event.target.value.length;
     },
@@ -161,32 +150,24 @@ export default {
   font-size: 1rem;
   color: #495057;
   background: #fff;
-  padding: 0.75rem 0;
-  border: none;
-  border-bottom: 1px solid #ced4da;
+  padding: 0.75rem 0.75rem;
+  border: 1px solid #ced4da;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
     box-shadow 0.2s;
   appearance: none;
+  border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
+
   &:hover {
     border-color: #3b82f6;
   }
+
   &:focus {
     outline: 0 none;
     outline-offset: 0;
+    box-shadow: 0 0 0 0.2rem #bfdbfe;
     border-color: #3b82f6;
-
-    + .ee-textarea-label {
-      top: -15px;
-      transform: scale(75%);
-      transform-origin: left;
-    }
-  }
-  &-focused .ee-textarea + .ee-textarea-label {
-    top: -15px;
-    transform: scale(75%);
-    transform-origin: left;
   }
   &.disabled {
     opacity: 0.5;
@@ -205,14 +186,9 @@ export default {
     padding: 0.75rem 0.9375rem;
   }
   &-label {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    z-index: 1;
-    pointer-events: none;
-    transition: transform 0.2s, top 0.2s;
+    padding-right: 0.5rem;
     display: block;
+    margin-bottom: 0.5rem;
   }
   &.invalid {
     border-color: #e24c4c !important;

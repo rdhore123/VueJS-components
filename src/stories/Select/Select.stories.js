@@ -1,19 +1,19 @@
-import Select from "./Select.vue";
+import Select from "../../components/Select/Select.vue";
 
 export default {
   title: "Data/Select/Basic",
   component: Select,
   argTypes: {
-    backgroundColor: { control: "color", description: "Select BG Color" },
-    borderColor: { control: "color", description: "Select Border Color" },
-    borderWidth: { control: "text", description: "Select Border Width" },
     rounded: { control: "text", description: "Select rounded corner in px" },
     textColor: { control: "color", description: "Select Text Color" },
+    iconClasses: { control: "text", description: "Add icon classes eg. `fa-solid fa-chevron-down`" },
     size: {
       control: { type: "select" },
       options: ["small", "medium", "large"],
     },
-    iconClasses: { control: "text", description: "Add icon classes eg. `fa-solid fa-chevron-down`" },
+    borderColor: { control: "color", description: "Select Border Color" },
+    borderWidth: { control: "text", description: "Select Border Width" },
+    backgroundColor: { control: "color", description: "Select BG Color" },
   },
   parameters: {
     previewTabs: {
@@ -37,29 +37,26 @@ const PlaygroundTemplate = (args) => ({
 export const Playground = PlaygroundTemplate.bind({});
 
 const Template = () => ({
-  // Components used in your story `template` are defined in the `components` object
   components: { Select },
-  // The story's `args` need to be mapped into the template through the `setup()` method and are optional depending on requirement
   setup() {
     const args = {
+      selectDropdownOptions: ["Option 1", "Option 2"],
       label: "New label",
-      disabled: false, // true
       id: "fname",
-      textColor: "#495057",  // Text color of Select field
+      size: "medium", 
+      iconClasses:"fa-solid fa-chevron-down", 
+      textColor: "#495057",  
       backgroundColor: "#fff",
       borderWidth: "1px",
-      rounded: "4px",  // border-radius
+      rounded: "4px",  
       borderColor: "#ced4da",
-      invalid: false, // true
-      errorMessage: "Field is required", // this will show only if  `invalid` is true
-      size: "medium",  // it can be small, medium, large
-      iconClasses:"fa-solid fa-chevron-down", // Font icons class names from library you included in your project
+      invalid: false, 
+      errorMessage: "Field is required", 
       helpText: "",
-      selectDropdownOptions: ["Option 1", "Option 2"]
+      disabled: false, 
     };
     return { args };
   },
-  // And then the `args` are bound to your component with `v-bind="args"`
   template:
     '<Select v-bind="args">Choose Option</Select>',
 });

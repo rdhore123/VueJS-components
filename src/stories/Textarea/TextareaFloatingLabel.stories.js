@@ -1,4 +1,4 @@
-import TextareaFloatingLabel from "./TextareaFloatingLabel.vue";
+import TextareaFloatingLabel from "../../components/Textarea/TextareaFloatingLabel.vue";
 
 export default {
   title: "Data/Textarea/Floating-Label",

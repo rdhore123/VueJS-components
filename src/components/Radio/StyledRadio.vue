@@ -5,10 +5,10 @@
         type="radio"
         :id="id"
         class="ee-styled-radio"
-        v-bind="$attrs"
+        :class="classes"
         @input="getValue"
         :rounded="rounded"
-        :class="classes"
+        v-bind="$attrs"
       />
     <label :for="id" class="ee-styled-radio-label">{{ label }}</label>
     </div>
@@ -28,19 +28,19 @@ export default {
     label: {
       type: String,
     },
-    invalid: {
-      type: Boolean,
-      default: false,
-    },
-    errorMessage: {
-      type: String,
-    },
     size: {
       type: String,
       validator: function (value) {
         return ["small", "medium", "large"].indexOf(value) !== -1;
       },
     },
+    invalid: {
+      type: Boolean,
+      default: false,
+    },
+    errorMessage: {
+      type: String,
+    },    
     disabled: {
       type: Boolean,
       default: false,

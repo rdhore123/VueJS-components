@@ -1,4 +1,4 @@
-import Checkbox from "./Checkbox.vue";
+import Checkbox from "../../components/Checkbox/Checkbox.vue";
 
 export default {
   title: "Data/Checkbox/Basic",
@@ -28,22 +28,18 @@ const PlaygroundTemplate = (args) => ({
 export const Playground = PlaygroundTemplate.bind({});
 
 const Template = () => ({
-  // Components used in your story `template` are defined in the `components` object
   components: { Checkbox },
-  // The story's `args` need to be mapped into the template through the `setup()` method and are optional depending on requirement
   setup() {
     const args = {
       label: "New label",
-      disabled: false, // true
+      size: "medium",
+      invalid: false,
+      errorMessage: "Field is required",
+      disabled: false,
       id: "fname",
-      invalid: false, // true
-      errorMessage: "Field is required", // this will show only if  `invalid` is true
-      size: "medium",  // it can be small, medium, large
-      placeholder: ""
     };
     return { args };
   },
-  // And then the `args` are bound to your component with `v-bind="args"`
   template:
     '<Checkbox v-bind="args" />',
 });

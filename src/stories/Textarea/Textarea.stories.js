@@ -1,20 +1,22 @@
-import SelectFloatingLabel from "./SelectFloatingLabel.vue";
+import Textarea from "../../components/Textarea/Textarea.vue";
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 export default {
-  title: "Data/Select/Floating-Label",
-  component: SelectFloatingLabel,
-  // More on argTypes: https://storybook.js.org/docs/vue/api/argtypes
+  title: "Data/Textarea/Basic",
+  component: Textarea,
   argTypes: {
     backgroundColor: { control: "color", description: "Select BG Color" },
     borderColor: { control: "color", description: "Select Border Color" },
     borderWidth: { control: "text", description: "Select Border Width" },
+    rounded: { control: "text", description: "Select rounded corner in px" },
+    characterLimit: { control: "text", description: "Select character limit" },
+    placeholder: { control: "text", description: "Add placeholder text" },
     textColor: { control: "color", description: "Select Text Color" },
-    size: {
+    rows: { control: "text", description: "Select number of rows" },
+    iconClasses: { control: "text", description: "Add icon classes eg. `fa-solid fa-magnifying-glass`" },
+    resize: {
       control: { type: "select" },
-      options: ["small", "medium", "large"],
+      options: ["auto", "both", "vertical", "horizontal", "none"],
     },
-    iconClasses: { control: "text", description: "Add icon classes eg. `fa-solid fa-chevron-down`" },
   },
   parameters: {
     previewTabs: {
@@ -25,45 +27,44 @@ export default {
 };
 
 const PlaygroundTemplate = (args) => ({
-  components: { SelectFloatingLabel },
+  components: { Textarea },
   setup() {
-    const args = {
-      label: "Choose Option",
-      selectDropdownOptions: ["Option 1", "Option 2"]
-    };
     return { args };
   },
   template:
-    '<SelectFloatingLabel v-bind="args" />',
+    '<Textarea v-bind="args" />',
 });
 export const Playground = PlaygroundTemplate.bind({});
 
 const Template = () => ({
   // Components used in your story `template` are defined in the `components` object
-  components: { SelectFloatingLabel },
+  components: { Textarea },
   // The story's `args` need to be mapped into the template through the `setup()` method and are optional depending on requirement
   setup() {
     const args = {
       label: "New label",
       disabled: false, // true
       id: "fname",
-      textColor: "#495057",  // Text color of Select field
+      textColor: "#495057",  // Text color of textarea field
       backgroundColor: "#fff",
       borderWidth: "1px",
       rounded: "4px",  // border-radius
+      characterLimit: "400",
       borderColor: "#ced4da",
       invalid: false, // true
       errorMessage: "Field is required", // this will show only if  `invalid` is true
-      size: "medium",  // it can be small, medium, large
-      iconClasses: "fa-solid fa-chevron-down", // Font icons class names from library you included in your project
+      rows: "",  // it can be 2, 3, 4, etc
+      iconClasses: "fa-solid fa-magnifying-glass", // Font icons class names from library you included in your project
+      iconRight: false, // true
       helpText: "",
-      selectDropdownOptions: ["Option 1", "Option 2"]
+      resize: "auto",  // it can be both, vertical, horizontal, none
+      placeholder: ""
     };
     return { args };
   },
   // And then the `args` are bound to your component with `v-bind="args"`
   template:
-    '<SelectFloatingLabel v-bind="args" />',
+    '<Textarea v-bind="args" />',
 });
 
 export const Usages = Template.bind({});

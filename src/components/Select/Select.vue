@@ -1,23 +1,29 @@
 <template>
-  <div class="ee-input-wrapper">
-    <label :for="id" v-if="label" class="ee-input-label">{{ label }}</label>
-    <div class="ee-input-inner">
-      <input
-        :type="inputType"
+  <div class="ee-select-wrapper">
+    <label :for="id" v-if="label" class="ee-select-label">{{ label }}</label>
+    <div class="ee-select-inner">
+      <select
         :id="id"
-        :placeholder="placeholder"
-        class="ee-input"
-        :style="style"
-        :value="inputValue"
-        @input="getValue"
-        :rounded="rounded"
+        class="ee-select"
         :class="classes"
+        :style="style"
+        :rounded="rounded"
+        @input="getValue"
         :helpText="helpText"
         v-bind="$attrs"
-      />
-      <i :class="iconClasses" class="ee-input-icon" v-if="iconClasses" />
+      >
+        <option selected disabled><slot /></option>
+        <option
+          v-for="(value, index) in selectDropdownOptions"
+          :key="index"
+          :value="value"
+        >
+          {{ value }}
+        </option>
+      </select>
+      <i :class="iconClasses" class="ee-select-icon" v-if="iconClasses" />
     </div>
-    <small class="ee-input-error" v-if="invalid">
+    <small class="ee-select-error" v-if="invalid">
       {{ errorMessage }}
     </small>
     <small v-if="helpText">
@@ -30,27 +36,16 @@
 import { reactive, computed } from "vue";
 
 export default {
-  name: "Input",
+  name: "Select",
   inheritAttrs: false,
   props: {
+    selectDropdownOptions: {
+      type: Array,
+    },
     label: {
       type: String,
     },
-    type: {
-      type: String,
-      required: true,
-      default: "text",
-      validator: function (value) {
-        return ["email", "number"].indexOf(value) !== -1;
-      },
-    },
     iconClasses: {
-      type: String,
-    },
-    iconRight: {
-      type: Boolean,
-    },
-    placeholder: {
       type: String,
     },
     size: {
@@ -89,11 +84,14 @@ export default {
       type: Boolean,
       default: false,
     },
-    inputValue: {
-      type: String,
-    },
     id: {
       type: String,
+    },
+  },
+
+  methods: {
+    getValue(event) {
+      this.emitter.emit("select-change", { selectChangeContent: event.target.value });
     },
   },
 
@@ -103,16 +101,12 @@ export default {
       classes: computed(() => ({
         disabled: props.disabled,
         invalid: props.invalid,
-        [`ee-input--${props.size || "medium"}`]: true,
-        [`ee-input--with-icon`]: props.iconClasses,
-        [`ee-input--with-right-icon`]: props.iconRight,
+        [`ee-select--${props.size || "medium"}`]: true,
+        [`ee-select--with-icon`]: props.iconClasses,
       })),
       iconClasses: computed(() => ({
         [`${props.iconClasses}`]: props.iconClasses,
-        [`ee-input--with-right-icon-image`]: props.iconRight,
       })),
-      inputType: computed(() => `${props.type || "text"}`),
-      placeholder: computed(() => `${props.placeholder || ""}`),
       style: computed(() => ({
         backgroundColor: props.backgroundColor,
         color: props.textColor,
@@ -122,17 +116,11 @@ export default {
       })),
     };
   },
-
-  methods: {
-    getValue(event) {
-      this.$emit("update:inputValue", event.target.value);
-    },
-  },
 };
 </script>
 
 <style lang="scss" scoped>
-.ee-input {
+.ee-select {
   font-size: 1rem;
   color: #495057;
   background: #fff;
@@ -140,7 +128,6 @@ export default {
   border: 1px solid #ced4da;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s,
     box-shadow 0.2s;
-  appearance: none;
   border-radius: 6px;
   width: 100%;
   box-sizing: border-box;
@@ -190,7 +177,7 @@ export default {
   }
   &-icon {
     position: absolute;
-    left: 10px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -199,6 +186,7 @@ export default {
   }
   &--with-icon {
     padding-left: 40px;
+    appearance: none;
   }
   &--with-right-icon {
     padding-right: 40px;
@@ -214,14 +202,14 @@ export default {
 }
 </style>
 <style>
-#anchor--data-input-floating-label--usages .docs-story div:first-child,
-#anchor--data-input-basic--usages .docs-story div:first-child,
-#anchor--data-input-basic--playground .docblock-code-toggle,
-#anchor--data-input-floating-label--playground .docblock-code-toggle {
+#anchor--data-select-floating-label--usages .docs-story div:first-child,
+#anchor--data-select-basic--usages .docs-story div:first-child,
+#anchor--data-select-basic--playground .docblock-code-toggle,
+#anchor--data-select-floating-label--playground .docblock-code-toggle {
   display: none !important;
 }
-#anchor--data-input-floating-label--usages .docs-story div:nth-child(2),
-#anchor--data-input-basic--usages .docs-story div:nth-child(2) {
+#anchor--data-select-floating-label--usages .docs-story div:nth-child(2),
+#anchor--data-select-basic--usages .docs-story div:nth-child(2) {
   position: static;
 }
 </style>

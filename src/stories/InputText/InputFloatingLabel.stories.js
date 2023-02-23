@@ -1,4 +1,4 @@
-import InputFloatingLabel from "./InputFloatingLabel.vue";
+import InputFloatingLabel from "../../components/InputText/InputFloatingLabel.vue";
 
 export default {
   title: "Data/InputText/Floating-Label",
